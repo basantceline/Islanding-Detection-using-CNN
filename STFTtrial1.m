@@ -1,16 +1,22 @@
-clc
 clear all;
-basw=zeros(1,50);
-perc=0.5;
-for k= 1:50
-    basw(1,k)=(((14*perc)^2-4.41)^0.5)-5.5;
-    perc=perc+0.01;
+%this bit of code is for variation in Active Power
+% basw=[];
+% perc=1;
+% for k= 1:5
+%     basw(1,end+1)=(((14*perc)^2-4.41)^0.5)-5.5;
+%     perc=perc+0.01;
+% end
+
+%this code segment is for variation in Fault resistance at DL-1
+res=[0.1 0.5];
+for s=2:50
+    res(1,end+1)=res(1,s)+0.5;
 end
 
 
 warning('off', 'all');
-for d= 10:50
-bas=basw(1,d)*1e6
+for d= 1:length(res)
+R=res(1,d)
 sim('IDTmodel');
 Va= VoltageCB1a.Data(1:end);
 Vb= VoltageCB1b.Data(1:end);
@@ -48,10 +54,10 @@ ylim([0 1000]);
 colorbar;
 caxis([-60 20]);  % Adjust color scale as needed
 % Save the spectrogram image
-folderPath = 'C:\Users\Dell\Desktop\Project MSC Third Sem\Papers\MATLAB Files\Scripts\Datasets\Islanding';
-fileName= [ num2str(d) '.png']
+folderPath = 'C:\Users\Dell\Desktop\Project MSC Third Sem\MATLAB Files\Scripts\Datasets\Non-Islanding';
+a=d+200;
+fileName= [ num2str(a) '.png']
 fullPath = fullfile(folderPath, fileName);
-% saveas(gcf, fullPath);
 exportgraphics(gcf,fullPath,'Resolution',300);
 end
 
